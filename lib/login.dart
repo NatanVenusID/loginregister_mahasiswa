@@ -1,11 +1,9 @@
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:loginregister_mahasiswa/registerpage.dart';
 import 'home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class PageLogin extends StatefulWidget {
   @override
@@ -40,20 +38,14 @@ class _PageLoginState extends State<PageLogin> {
     print(data);
 // get data respon
     String dataUsername = data['username'];
-    String dataEmail = data['email'];
-    String dataAlamat = data['alamat'];
-    String dataSex = data['sex'];
-    String dataFullname = data['full_name'];
-    String dataTanggalDaftar = data['tgl_daftar'];
-    String dataIdUser = data['id_user'];
+    String dataPassword = data['email'];
 // cek value 1 atau 0
     if (value == 1) {
       setState(() {
 // set status loginnya sebagai login
         _loginStatus = statusLogin.signIn;
 // simpan data ke share preferences
-        saveDataPref(value, dataIdUser, dataUsername, dataEmail, dataAlamat,
-            dataSex, dataFullname, dataTanggalDaftar);
+        saveDataPref(value, dataUsername, dataPassword);
       });
     } else if (value == 2) {
       print(pesan);
@@ -63,21 +55,16 @@ class _PageLoginState extends State<PageLogin> {
   }
 
 // method untuk soimpan share pref
-  saveDataPref(int value, String dIdUser, dUsername, dEmail, dAlamat, dSex,
-      dFullName, dCreated) async {
+  saveDataPref(int value, String dUsername, dPassword) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
       sharedPreferences.setInt("value", value);
       sharedPreferences.setString("username", dUsername);
-      sharedPreferences.setString("id_user", dIdUser);
-      sharedPreferences.setString("email", dEmail);
-      sharedPreferences.setString("alamat", dAlamat);
-      sharedPreferences.setString("sex", dSex);
-      sharedPreferences.setString("full_name", dFullName);
-      sharedPreferences.setString("tgl_daftar", dCreated);
+      sharedPreferences.setString("password", dPassword);
     });
   }
-      getDataPref() async {
+
+  getDataPref() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
       int nvalue = sharedPreferences.getInt("value");
@@ -92,6 +79,7 @@ class _PageLoginState extends State<PageLogin> {
   }
 
   @override
+  // ignore: missing_return
   Widget build(BuildContext context) {
     switch (_loginStatus) {
       case statusLogin.notSignIn:
@@ -115,11 +103,11 @@ class _PageLoginState extends State<PageLogin> {
                   height: 20.0,
                 ),
                 Container(
-                height: 136,
-                decoration: BoxDecoration(
-                    image:
-                        DecorationImage(image: AssetImage("assets/venus.png"))),
-              ),
+                  height: 136,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage("assets/venus.png"))),
+                ),
                 Padding(
                   padding: EdgeInsets.all(10.0),
                   child: TextFormField(
